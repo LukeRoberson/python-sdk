@@ -14,10 +14,9 @@ This Python SDK provides a simple and efficient way for Docker containers to com
 You can install the SDK using pip:
 
 ```bash
-pip install git+https://github.com/yourusername/python-sdk.git
+pip install git+https://github.com/LukeRoberson/python-sdk.git
 ```
 
-Replace `yourusername` with your GitHub username.
 
 ## Usage
 
