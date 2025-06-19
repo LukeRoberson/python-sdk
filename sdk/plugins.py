@@ -1,30 +1,30 @@
 """
-Module: sdk.config
+Module: sdk.plugins
 
-This module provides a configuration management system for the SDK.
+This module provides a plugin management system for the SDK.
 
 Classes:
-    Config:
-        Manages configuration settings for the application.
-        Configuration is managed by the Core service.
-        This class interacts with the Core service to manage config.
+    PluginManager:
+        Manage plugins through API calls to the Core service.
+        Supports CRUD operations.
 
 Dependencies:
     - requests: For making HTTP requests to the Core service.
     - traceback: For handling exceptions and printing tracebacks.
 """
 
+
 import requests
 import traceback as tb
 import logging
 
 
-logger = logging.getLogger("sdk.config")
+logger = logging.getLogger("sdk.plugins")
 
 
-class Config:
+class PluginManager:
     """
-    Config class to manage configuration settings for the application.
+    Class to manage plugins. Uses API calls to the Core service.
 
     Args:
         url (str): The URL to fetch the configuration from.
@@ -35,7 +35,8 @@ class Config:
         url: str,
     ) -> None:
         """
-        Initialize the Config class with a URL to fetch configuration from.
+        Initialize the class with a URL for the API plugin endpoint
+            on the core service.
 
         Args:
             url (str): The URL to fetch the configuration from.
@@ -48,7 +49,7 @@ class Config:
 
     def __enter__(
         self
-    ) -> 'Config':
+    ) -> 'PluginManager':
         """
         Enter the runtime context related to this object.
 
@@ -87,49 +88,66 @@ class Config:
 
         return True
 
+    def create(
+        self,
+        config: dict
+    ) -> bool:
+        # Not implemented yet
+        return True
+
     def read(
         self
-    ) -> dict:
+    ) -> list:
         """
-        Fetch the current configuration from the Core service.
+        Fetch the plugin configuration from the core service.
+
+        Args:
+            None
+
+        Returns:
+            list: A list of plugins and configuration loaded
+                from the core service.
+
+        Raises:
+            RuntimeError: If the plugin configuration cannot be loaded.
         """
 
-        global_config = None
+        plugin_config = None
         try:
-            response = requests.get(self.url, timeout=3)
+            response = requests.get(
+                self.url,
+                headers={'X-Plugin-Name': 'all'},
+                timeout=3,
+            )
             response.raise_for_status()
-            global_config = response.json()
+            plugin_config = response.json()
 
         except Exception as e:
             logging.critical(
-                "Failed to fetch global config from core service."
+                "Failed to fetch plugin config from core service."
                 f" Error: {e}"
             )
-            return {}
+            return []
 
-        if global_config is None:
+        if plugin_config is None:
             logging.critical(
-                "Global configuration could not be loaded from core service."
+                "Plugin configuration could not be loaded from core service."
             )
-            return {}
+            return []
 
-        return global_config['config']
+        return plugin_config['plugins']
 
     def update(
         self,
         config: dict
     ) -> bool:
-        """
-        Update the configuration with the provided dictionary.
 
-        Args:
-            config (dict): The configuration dictionary to update.
+        # Not implemented yet
+        return True
 
-        Returns:
-            bool: True if the update was successful, False otherwise.
-        """
+    def delete(
+        self,
+    ) -> bool:
 
-        # This method would typically send the config to the Core service
-        print("Placeholder for update method.")
-
+        # Not implemented yet
         return True
