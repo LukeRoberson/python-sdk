@@ -89,12 +89,68 @@ class PluginManager:
 
         return True
 
+    def _plugin_request(
+        self,
+        method: str,
+        config: dict
+    ) -> bool:
+        """
+        Make a request to the Core API to manage plugins.
+            Used with create, update, and delete operations.
+
+        Args:
+            method (str): The HTTP method to use
+                (e.g., 'POST', 'PATCH', 'DELETE').
+            config (dict): The configuration for the plugin to manage.
+
+        Returns:
+            bool: True if the request was successful, False otherwise.
+        """
+
+        if not config:
+            logging.error("No configuration provided for the plugin.")
+            return False
+
+        try:
+            response = requests.request(
+                method,
+                self.url,
+                json=config,
+                timeout=3
+            )
+
+            if response.status_code != 200:
+                logging.error(
+                    "Core service failed to %s plugin:\n %s",
+                    method,
+                    response.text
+                )
+                return False
+
+        except Exception as e:
+            logging.error("Error accessing the plugins API: %s", e)
+            return False
+
+        return True
+
     def create(
         self,
         config: dict
     ) -> bool:
-        # Not implemented yet
-        return True
+        """
+        Add a new plugin using the Core API.
+
+        Args:
+            config (dict): The configuration for the plugin to add.
+
+        Returns:
+            bool: True if the plugin was added successfully, False otherwise.
+        """
+
+        return self._plugin_request(
+            'POST',
+            config,
+        )
 
     def read(
         self,
@@ -144,13 +200,37 @@ class PluginManager:
         self,
         config: dict
     ) -> bool:
+        """
+        Update an existing plugin using the Core API.
 
-        # Not implemented yet
-        return True
+        Args:
+            config (dict): The updated configuration for the plugin.
+
+        Returns:
+            bool: True if the plugin was updated successfully, False otherwise.
+        """
+
+        return self._plugin_request(
+            'PATCH',
+            config
+        )
 
     def delete(
         self,
+        config: dict
     ) -> bool:
+        """
+        Delete a plugin using the Core API.
 
-        # Not implemented yet
-        return True
+        Args:
+            config (dict):
+                The configuration containing the name of the plugin to delete.
+
+        Returns:
+            bool: True if the plugin was deleted successfully, False otherwise.
+        """
+
+        return self._plugin_request(
+            'DELETE',
+            config
+        )
