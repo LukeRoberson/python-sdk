@@ -155,7 +155,7 @@ class PluginManager:
     def read(
         self,
         name: Optional[str] = 'all',
-    ) -> list:
+    ) -> list | dict:
         """
         Fetch the plugin configuration from the core service.
 
