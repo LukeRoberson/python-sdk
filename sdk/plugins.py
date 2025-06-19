@@ -194,7 +194,10 @@ class PluginManager:
             )
             return []
 
-        return plugin_config['plugins']
+        if 'plugins' in plugin_config:
+            return plugin_config['plugins']
+        else:
+            return plugin_config
 
     def update(
         self,

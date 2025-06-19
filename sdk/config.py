@@ -148,14 +148,14 @@ class Config:
             if resp.status_code != 200:
                 return (
                     False,
-                    f"Failed to update configuration: {resp.text}"
+                    resp.text
                 )
 
         except Exception as e:
             logging.error("Failed to patch core service: %s", e)
             return (
                 False,
-                f"Failed to update configuration: {e}"
+                f"{e}"
             )
 
         # If successful, recycle the workers to apply the changes
