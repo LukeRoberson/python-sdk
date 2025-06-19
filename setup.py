@@ -8,21 +8,21 @@ Dependancies:
     setuptools: Used to package the Python SDK.
 """
 
-from setuptools import setup, find_packages
+from setuptools import setup
+
 
 setup(
     name='python-sdk',
     version='0.1.0',
-    author='Your Name',
-    author_email='your.email@example.com',
+    author='Luke Robertson',
+    author_email='luke.robertson@networkdirection.net',
     description=(
         """
         A Python SDK for interacting with Docker container projects
         via REST API
         """
     ),
-    packages=find_packages(where='sdk'),
-    package_dir={'': 'sdk'},
+    packages=['sdk'],
     install_requires=[
         'requests',
     ],
