@@ -17,6 +17,7 @@ Dependencies:
 import requests
 import traceback as tb
 import logging
+from typing import Optional
 
 
 logger = logging.getLogger("sdk.plugins")
@@ -96,13 +97,15 @@ class PluginManager:
         return True
 
     def read(
-        self
+        self,
+        name: Optional[str] = 'all',
     ) -> list:
         """
         Fetch the plugin configuration from the core service.
 
         Args:
-            None
+            name (Optional[str]): The name of the plugin to fetch.
+                Fetches all plugins by default.
 
         Returns:
             list: A list of plugins and configuration loaded
@@ -116,7 +119,7 @@ class PluginManager:
         try:
             response = requests.get(
                 self.url,
-                headers={'X-Plugin-Name': 'all'},
+                headers={'X-Plugin-Name': name},
                 timeout=3,
             )
             response.raise_for_status()
