@@ -17,6 +17,8 @@ Dependencies:
 import requests
 import traceback as tb
 import logging
+import os
+from typing import Tuple
 
 
 logger = logging.getLogger("sdk.config")
@@ -117,19 +119,53 @@ class Config:
 
     def update(
         self,
-        config: dict
-    ) -> bool:
+        config: dict,
+        reload_file: str,
+    ) -> Tuple[bool, str]:
         """
         Update the configuration with the provided dictionary.
 
         Args:
             config (dict): The configuration dictionary to update.
+            reload_file (str): The path to the file that triggers a reload
+                of the uWSGI workers.
 
         Returns:
-            bool: True if the update was successful, False otherwise.
+            Tuple[bool, str]: A tuple containing a success flag and a message.
         """
 
         # This method would typically send the config to the Core service
         print("Placeholder for update method.")
 
-        return True
+        # Forward the PATCH request to the core service
+        try:
+            resp = requests.patch(
+                self.url,
+                json=config,
+                timeout=3
+            )
+
+            if resp.status_code != 200:
+                return (
+                    False,
+                    f"Failed to update configuration: {resp.text}"
+                )
+
+        except Exception as e:
+            logging.error("Failed to patch core service: %s", e)
+            return (
+                False,
+                f"Failed to update configuration: {e}"
+            )
+
+        # If successful, recycle the workers to apply the changes
+        try:
+            with open(reload_file, 'a'):
+                os.utime(reload_file, None)
+        except Exception as e:
+            logging.error("Failed to update reload.txt: %s", e)
+
+        return (
+            True,
+            "Configuration updated successfully."
+        )
