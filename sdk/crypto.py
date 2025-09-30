@@ -113,7 +113,10 @@ class CryptoServices:
         # Handle errors
         else:
             error = data.get("error", "Unknown error")
-            logging.error("Encryption service returned an error: %s", error)
+            logging.error(
+                f"CryptoServices.Encrypt => "
+                f"Encryption service returned an error: {error}"
+            )
             return ("error", str(error))
 
         # Return the encrypted value and salt
@@ -160,7 +163,10 @@ class CryptoServices:
         # Handle errors
         else:
             error = data.get("error", "Unknown error")
-            logging.error("Encryption service returned an error: %s", error)
+            logging.error(
+                f"CryptoServices.Decrypt => "
+                f"Encryption service returned an error: {error}"
+            )
             return ("error", str(error))
 
         # Return the encrypted value and salt
